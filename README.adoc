@@ -1,0 +1,12 @@
+## Red Hat Single Sign On Demo
+
+### Requirements
+
+* EAP 7 binaries
+* EAP 7 OpenID adapter
+* EAP 7 SAML adapter
+* RH SSO 7.1 binary
+
+### Setup
+
+    ./setup.sh 
