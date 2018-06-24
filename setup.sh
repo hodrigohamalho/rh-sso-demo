@@ -48,6 +48,7 @@ function installEAP(){
 	printf "\n Installing RH SSO EAP 7 SAML Adapter \n\n"
 	unzip -oq $EAP_SSO_SAML_ADAPTER -d $EAP_HOME
 
+	printf "\n Starting EAP to install modules \n\n"
 	$EAP_HOME/bin/standalone.sh > /dev/null &
 	sleep JBOSS_STARTUP_TIME
 	
@@ -72,22 +73,43 @@ function installSSO(){
 	fi
 }
 
-validateRequirements
-rm -rf $TARGET_DIR/*
-installEAP
-installSSO
+function usersInfo(){
+	echo "############### CREDENTIALS ##################"
+	echo "USER: admin"
+	echo "PASSWORD: redhat@123"
+	echo "##############################################"
+}
 
-if [ ! -d "keycloak-quickstarts" ]; then
-	git clone https://github.com/keycloak/keycloak-quickstarts
-fi
+function start(){
+	echo "Starting EAP default port"
+	$EAP_HOME/bin/standalone.sh > /dev/null &
+	echo "Starting SSO port-offset 100"
+	$SSO_HOME/bin/standalone.sh -Djboss.socket.binding.port-offset=100 > /dev/null &
+}
 
-# mvn -f keycloak-quickstarts/service-jee-jaxrs/pom.xml clean install -DskipTests
-# mvn -f keycloak-quickstarts/app-profile-jee-html5/pom.xml clean install -DskipTests
-# mvn -f keycloak-quickstarts/app-profile-jee-jsp/pom.xml clean install -DskipTests
+case "$1" in
+        install)
+			validateRequirements
+			rm -rf $TARGET_DIR/*
+			installEAP
+			installSSO
+            ;;
 
-# mvn clean install
+        uninstall)
+            uninstall
+            ;;
 
-# Admin 
+		start)
+			start
+			;; 
 
-# http://localhost:8080/auth/
+        credentials)
+            usersInfo
+            ;;
+
+        *)
+			echo $"Usage: $0  install | uninstall | start | credentials"
+            exit 1
+
+esac
 

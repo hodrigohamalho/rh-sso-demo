@@ -10,3 +10,15 @@
 ### Setup
 
     ./setup.sh 
+
+### Start EAP
+
+    ./install/jboss-eap-7.1/bin/standalone.sh
+
+### Start SSO 
+
+    ./standalone.sh -Djboss.socket.binding.port-offset=100
+
+
+
+
